@@ -312,7 +312,15 @@ public class PlanificadorProcesos extends javax.swing.JFrame {
     
     public void setData(ArrayList<Proceso> procesos){
         this.planificador = new Planificador(procesos);
-        this.procesos = planificador.getModeloFIFO();
+        if(this.algoritmo == 0){
+            this.procesos = planificador.getModeloFIFO();
+        } else if (this.algoritmo == 1){
+            this.procesos = planificador.getModeloSJF();
+        } else if (this.algoritmo == 2){
+            this.procesos = planificador.getModeloSJRF();
+        } else if (this.algoritmo == 3){
+            this.procesos = planificador.getModeloExpropiativo();
+        }
         this.addTable();
     }
     
@@ -348,7 +356,6 @@ public class PlanificadorProcesos extends javax.swing.JFrame {
             this.tEsperaPromedio = this.tEsperaPromedio + this.procesos.get(x).gettEspera();
         }
         this.tEsperaPromedio = this.tEsperaPromedio/this.procesos.size();
-        System.out.println(this.tEsperaPromedio);
         this.jLabel5.setText(this.tEsperaPromedio+"");
     }
     

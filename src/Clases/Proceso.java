@@ -18,6 +18,10 @@ public class Proceso {
     private int tFinaliza = 0;
     private int tEspera = 0;
     private int prioridad = 0;
+    
+    public Proceso() {
+    
+    }
 
     public Proceso(int tLlegada, int tCPU) {
         this.numeroProceso++;
