@@ -54,6 +54,35 @@ public class Planificador {
     }
 
     public ArrayList<Proceso> getModeloSRTF() {
+        
+        int x = 1;
+        int indexEjecucion = 0;
+        do{
+            if((this.tiempo + this.procesos.get(indexEjecucion).gettCPU()) >= this.procesos.get(x).gettLlegada() && this.procesos.get(indexEjecucion).gettCPU() > this.procesos.get(x).gettCPU() && !this.procesos.get(x).isCompletado()){
+                this.procesos.get(indexEjecucion).settComienzo(this.tiempo);
+                this.procesos.get(indexEjecucion).settFinaliza(this.procesos.get(x).gettLlegada());
+                this.procesos.get(indexEjecucion).settCPU(this.procesos.get(indexEjecucion).gettCPU() - (this.procesos.get(x).gettLlegada() - this.tiempo));
+                this.tiempo =  this.procesos.get(x).gettLlegada();
+                indexEjecucion = x;
+                x = 0;
+            } else {
+                if(x == this.procesos.size()-1){
+                    this.procesos.get(indexEjecucion).settComienzo(this.tiempo);
+                    this.procesos.get(indexEjecucion).settFinaliza(this.tiempo + this.procesos.get(indexEjecucion).gettCPU());
+                    this.procesos.get(indexEjecucion).settCPU(0);
+                    this.tiempo =  this.procesos.get(indexEjecucion).gettFinaliza();
+                    indexEjecucion = this.getIncompletedShortTime();
+                    if(indexEjecucion != -1){
+                        this.procesos.get(indexEjecucion).settLlegada(this.tiempo);
+                    }
+                    x = indexEjecucion;
+                } else {
+                    x++;
+                }
+            }
+        }while(!this.areProcesosCompletados());
+        
+        this.ordenarPorId();
         return this.procesos;
     }
 
@@ -74,7 +103,7 @@ public class Planificador {
                     this.procesos.get(indexEjecucion).settFinaliza(this.tiempo + this.procesos.get(indexEjecucion).gettCPU());
                     this.procesos.get(indexEjecucion).settCPU(0);
                     this.tiempo =  this.procesos.get(indexEjecucion).gettFinaliza();
-                    indexEjecucion = this.getIncompleted();
+                    indexEjecucion = this.getIncompletedPriority();
                     if(indexEjecucion != -1){
                         this.procesos.get(indexEjecucion).settLlegada(this.tiempo);
                     }
@@ -150,7 +179,7 @@ public class Planificador {
         return true;
     };
     
-    private int getIncompleted(){
+    private int getIncompletedPriority(){
         int auxiliar = 4;
         int indexAuxiliar = 0;
         for(int x = 0 ; x < this.procesos.size() ; x++){
@@ -160,6 +189,21 @@ public class Planificador {
             }
         }
         if(auxiliar != 4){
+            return indexAuxiliar;
+        }
+        return -1;
+    }
+    
+    private int getIncompletedShortTime(){
+        int auxiliar =  Integer.MAX_VALUE;
+        int indexAuxiliar = 0;
+        for(int x = 0 ; x < this.procesos.size() ; x++){
+            if(this.procesos.get(x).gettLlegada() <= this.tiempo && this.procesos.get(x).gettCPU() < auxiliar && !this.procesos.get(x).isCompletado()){
+                auxiliar = this.procesos.get(x).gettCPU();
+                indexAuxiliar = x;
+            }
+        }
+        if(auxiliar != Integer.MAX_VALUE){
             return indexAuxiliar;
         }
         return -1;
