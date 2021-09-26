@@ -18,8 +18,8 @@ public class Planificador {
 
     public Planificador(ArrayList<Proceso> procesos) {
         this.procesos = procesos;
-        this.tiempo = 0;
         this.ordenarPorTiempoLlegada();
+        this.tiempo = this.procesos.get(0).gettLlegada();
     }
     
     public ArrayList<Proceso> getModeloFIFO() {
@@ -53,14 +53,41 @@ public class Planificador {
         return this.procesos;
     }
 
-    public ArrayList<Proceso> getModeloSJRF() {
+    public ArrayList<Proceso> getModeloSRTF() {
         return this.procesos;
     }
 
     public ArrayList<Proceso> getModeloExpropiativo() {
+        int x = 1;
+        int indexEjecucion = 0;
+        do{
+            if((this.tiempo + this.procesos.get(indexEjecucion).gettCPU()) >= this.procesos.get(x).gettLlegada() && this.procesos.get(indexEjecucion).getPrioridad() > this.procesos.get(x).getPrioridad() && !this.procesos.get(x).isCompletado()){
+                this.procesos.get(indexEjecucion).settComienzo(this.tiempo);
+                this.procesos.get(indexEjecucion).settFinaliza(this.procesos.get(x).gettLlegada());
+                this.procesos.get(indexEjecucion).settCPU(this.procesos.get(indexEjecucion).gettCPU() - (this.procesos.get(x).gettLlegada() - this.tiempo));
+                this.tiempo =  this.procesos.get(x).gettLlegada();
+                indexEjecucion = x;
+                x = 0;
+            } else {
+                if(x == this.procesos.size()-1){
+                    this.procesos.get(indexEjecucion).settComienzo(this.tiempo);
+                    this.procesos.get(indexEjecucion).settFinaliza(this.tiempo + this.procesos.get(indexEjecucion).gettCPU());
+                    this.procesos.get(indexEjecucion).settCPU(0);
+                    this.tiempo =  this.procesos.get(indexEjecucion).gettFinaliza();
+                    indexEjecucion = this.getIncompleted();
+                    if(indexEjecucion != -1){
+                        this.procesos.get(indexEjecucion).settLlegada(this.tiempo);
+                    }
+                    x = indexEjecucion;
+                } else {
+                    x++;
+                }
+            }
+        }while(!this.areProcesosCompletados());
+        this.ordenarPorId();
         return this.procesos;
-    }
-        
+    };
+    
     private void ordenarPorProcesoCorto(){
         
         Proceso auxiliar;
@@ -113,4 +140,28 @@ public class Planificador {
             }
         }
     };
+    
+    private boolean areProcesosCompletados() {
+        for(int x = 0 ; x < this.procesos.size() ; x++){
+            if(!this.procesos.get(x).isCompletado()){
+                return false;
+            }
+        }
+        return true;
+    };
+    
+    private int getIncompleted(){
+        int auxiliar = 4;
+        int indexAuxiliar = 0;
+        for(int x = 0 ; x < this.procesos.size() ; x++){
+            if(this.procesos.get(x).gettLlegada() <= this.tiempo && this.procesos.get(x).getPrioridad() < auxiliar && !this.procesos.get(x).isCompletado()){
+                auxiliar = this.procesos.get(x).getPrioridad();
+                indexAuxiliar = x;
+            }
+        }
+        if(auxiliar != 4){
+            return indexAuxiliar;
+        }
+        return -1;
+    }
 }

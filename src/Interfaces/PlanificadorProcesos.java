@@ -317,7 +317,7 @@ public class PlanificadorProcesos extends javax.swing.JFrame {
         } else if (this.algoritmo == 1){
             this.procesos = planificador.getModeloSJF();
         } else if (this.algoritmo == 2){
-            this.procesos = planificador.getModeloSJRF();
+            this.procesos = planificador.getModeloSRTF();
         } else if (this.algoritmo == 3){
             this.procesos = planificador.getModeloExpropiativo();
         }

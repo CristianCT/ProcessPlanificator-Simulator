@@ -18,10 +18,10 @@ public class Proceso {
     private int tFinaliza = 0;
     private int tEspera = 0;
     private int prioridad = 0;
+    private boolean completado;
+    private boolean esperar = false;
     
-    public Proceso() {
-    
-    }
+    public Proceso() {}
 
     public Proceso(int tLlegada, int tCPU) {
         this.numeroProceso++;
@@ -36,6 +36,7 @@ public class Proceso {
         this.tLlegada = tLlegada;
         this.tCPU = tCPU;
         this.prioridad = prioridad;
+        this.completado = false;
     }
 
     public String getIdProceso() {
@@ -70,17 +71,29 @@ public class Proceso {
         return prioridad;
     }
 
+    public boolean isCompletado() {
+        return completado;
+    }
+   
     public void settLlegada(int tLlegada) {
         this.tLlegada = tLlegada;
     }
 
     public void settComienzo(int tComienzo) {
-        this.tEspera = tComienzo - this.tLlegada;
         this.tComienzo = tComienzo;
+        if(this.tEspera == 0 && !this.esperar){
+            this.tEspera += (this.tComienzo - this.tLlegada);
+            this.esperar = true;
+        } else {
+            this.tEspera += (this.tComienzo - this.tFinaliza);
+        }
     }
 
     public void settCPU(int tCPU) {
         this.tCPU = tCPU;
+        if(this.tCPU == 0){
+            this.setCompletado(true);
+        }
     }
 
     public void settFinaliza(int tFinaliza) {
@@ -90,13 +103,12 @@ public class Proceso {
     public void setPrioridad(int prioridad) {
         this.prioridad = prioridad;
     }
+
+    private void setCompletado(boolean completado) {
+        this.completado = completado;
+    }    
     
     public void resetIdProcesos() {
         this.numeroProceso = 0;
-    }
-
-    @Override
-    public String toString() {
-        return "Proceso{" + "tLlegada=" + tLlegada + ", tComienzo=" + tComienzo + ", tCPU=" + tCPU + ", tFinaliza=" + tFinaliza + ", tEspera=" + tEspera + ", prioridad=" + prioridad + '}';
     }
 }
