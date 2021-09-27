@@ -19,13 +19,13 @@ public class Planificador {
     public Planificador(ArrayList<Proceso> procesos) {
         this.procesos = procesos;
         this.ordenarPorTiempoLlegada();
-        this.tiempo = this.procesos.get(0).gettLlegada();
+        this.tiempo = this.procesos.get(0).gettLlegada(0);
     }
     
     public ArrayList<Proceso> getModeloFIFO() {
         for(int x = 0 ; x < this.procesos.size() ; x++){
             if(x == 0){
-                this.tiempo = this.procesos.get(x).gettLlegada();
+                this.tiempo = this.procesos.get(x).gettLlegada(0);
             }
             this.procesos.get(x).settComienzo(tiempo);
             this.tiempo += this.procesos.get(x).gettCPU();
@@ -42,7 +42,7 @@ public class Planificador {
                 this.procesos.get(x).settFinaliza(this.procesos.get(x).gettComienzo()+this.procesos.get(x).gettCPU());
                 this.tiempo += this.procesos.get(x).gettCPU();
             } else {
-                this.tiempo = this.procesos.get(x).gettLlegada();
+                this.tiempo = this.procesos.get(x).gettLlegada(0);
                 this.procesos.get(x).settComienzo(tiempo);
                 this.procesos.get(x).settFinaliza(this.procesos.get(x).gettComienzo()+this.procesos.get(x).gettCPU());
                 this.tiempo += this.procesos.get(x).gettCPU();
@@ -58,11 +58,11 @@ public class Planificador {
         int x = 1;
         int indexEjecucion = 0;
         do{
-            if((this.tiempo + this.procesos.get(indexEjecucion).gettCPU()) >= this.procesos.get(x).gettLlegada() && (this.procesos.get(indexEjecucion).gettCPU() + this.procesos.get(indexEjecucion).gettLlegada() - this.procesos.get(x).gettLlegada()) > this.procesos.get(x).gettCPU() && this.procesos.get(x).gettCPU() < this.procesos.get(indexEjecucion).gettCPU() && !this.procesos.get(x).isCompletado()){
+            if((this.tiempo + this.procesos.get(indexEjecucion).gettCPU()) >= this.procesos.get(x).gettLlegada(0) && (this.procesos.get(indexEjecucion).gettCPU() + this.procesos.get(indexEjecucion).gettLlegada(0) - this.procesos.get(x).gettLlegada(0)) > this.procesos.get(x).gettCPU() && this.procesos.get(x).gettCPU() < this.procesos.get(indexEjecucion).gettCPU() && !this.procesos.get(x).isCompletado()){
                 this.procesos.get(indexEjecucion).settComienzo(this.tiempo);
-                this.procesos.get(indexEjecucion).settFinaliza(this.procesos.get(x).gettLlegada());
-                this.procesos.get(indexEjecucion).settCPU(this.procesos.get(indexEjecucion).gettCPU() - (this.procesos.get(x).gettLlegada() - this.tiempo));
-                this.tiempo =  this.procesos.get(x).gettLlegada();
+                this.procesos.get(indexEjecucion).settFinaliza(this.procesos.get(x).gettLlegada(0));
+                this.procesos.get(indexEjecucion).settCPU(this.procesos.get(indexEjecucion).gettCPU() - (this.procesos.get(x).gettLlegada(0) - this.tiempo));
+                this.tiempo =  this.procesos.get(x).gettLlegada(0);
                 indexEjecucion = x;
                 x = 0;
             } else {
@@ -90,11 +90,11 @@ public class Planificador {
         int x = 1;
         int indexEjecucion = 0;
         do{
-            if((this.tiempo + this.procesos.get(indexEjecucion).gettCPU()) >= this.procesos.get(x).gettLlegada() && this.procesos.get(indexEjecucion).getPrioridad() > this.procesos.get(x).getPrioridad() && !this.procesos.get(x).isCompletado()){
+            if((this.tiempo + this.procesos.get(indexEjecucion).gettCPU()) >= this.procesos.get(x).gettLlegada(0) && this.procesos.get(indexEjecucion).getPrioridad() > this.procesos.get(x).getPrioridad() && !this.procesos.get(x).isCompletado()){
                 this.procesos.get(indexEjecucion).settComienzo(this.tiempo);
-                this.procesos.get(indexEjecucion).settFinaliza(this.procesos.get(x).gettLlegada());
-                this.procesos.get(indexEjecucion).settCPU(this.procesos.get(indexEjecucion).gettCPU() - (this.procesos.get(x).gettLlegada() - this.tiempo));
-                this.tiempo =  this.procesos.get(x).gettLlegada();
+                this.procesos.get(indexEjecucion).settFinaliza(this.procesos.get(x).gettLlegada(0));
+                this.procesos.get(indexEjecucion).settCPU(this.procesos.get(indexEjecucion).gettCPU() - (this.procesos.get(x).gettLlegada(0) - this.tiempo));
+                this.tiempo =  this.procesos.get(x).gettLlegada(0);
                 indexEjecucion = x;
                 x = 0;
             } else {
@@ -124,7 +124,7 @@ public class Planificador {
         int bandera=1;
         for(int x = 1 ; x < this.procesos.size(); x++){
             for(int y = x + 1 ; y < this.procesos.size() ; y++){
-                if(this.procesos.get(y).gettCPU() <= this.procesos.get(x).gettCPU() &&  this.procesos.get(y).gettLlegada() <= tiempoAuxiliar){
+                if(this.procesos.get(y).gettCPU() <= this.procesos.get(x).gettCPU() &&  this.procesos.get(y).gettLlegada(0) <= tiempoAuxiliar){
                     auxiliar = this.procesos.get(x);
                     this.procesos.set(x, this.procesos.get(y));
                     this.procesos.set(y, auxiliar);
@@ -135,7 +135,6 @@ public class Planificador {
             tiempoAuxiliar += this.procesos.get(bandera).gettCPU();
             bandera++;
         }
-        System.out.println(this.procesos);
     };
     
     private void ordenarPorTiempoLlegada(){
@@ -144,7 +143,7 @@ public class Planificador {
         
         for(int x = 0 ; x < this.procesos.size(); x++){
             for(int y = x + 1 ; y < this.procesos.size() ; y++){
-                if(this.procesos.get(y).gettLlegada() <= this.procesos.get(x).gettLlegada()){
+                if(this.procesos.get(y).gettLlegada(0) <= this.procesos.get(x).gettLlegada(0)){
                     auxiliar = this.procesos.get(x);
                     this.procesos.set(x, this.procesos.get(y));
                     this.procesos.set(y, auxiliar);
@@ -183,7 +182,7 @@ public class Planificador {
         int auxiliar = Integer.MAX_VALUE;
         int indexAuxiliar = 0;
         for(int x = 0 ; x < this.procesos.size() ; x++){
-            if(this.procesos.get(x).gettLlegada() <= this.tiempo && this.procesos.get(x).getPrioridad() < auxiliar && !this.procesos.get(x).isCompletado()){
+            if(this.procesos.get(x).gettLlegada(0) <= this.tiempo && this.procesos.get(x).getPrioridad() < auxiliar && !this.procesos.get(x).isCompletado()){
                 auxiliar = this.procesos.get(x).getPrioridad();
                 indexAuxiliar = x;
             }
@@ -198,7 +197,7 @@ public class Planificador {
         int auxiliar =  Integer.MAX_VALUE;
         int indexAuxiliar = 0;
         for(int x = 0 ; x < this.procesos.size() ; x++){
-            if(this.procesos.get(x).gettLlegada() <= this.tiempo && this.procesos.get(x).gettCPU() < auxiliar && !this.procesos.get(x).isCompletado()){
+            if(this.procesos.get(x).gettLlegada(0) <= this.tiempo && this.procesos.get(x).gettCPU() < auxiliar && !this.procesos.get(x).isCompletado()){
                 auxiliar = this.procesos.get(x).gettCPU();
                 indexAuxiliar = x;
             }

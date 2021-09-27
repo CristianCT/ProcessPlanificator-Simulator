@@ -5,6 +5,8 @@
  */
 package Clases;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author Hp
@@ -12,11 +14,11 @@ package Clases;
 public class Proceso {
     private static int numeroProceso = 0;
     private int idProceso;
-    private int tLlegada = 0;
-    private int tComienzo = 0;
-    private int tCPU = 0;
-    private int tFinaliza = 0;
-    private int tEspera = 0;
+    private ArrayList tLlegada;
+    private ArrayList tComienzo;
+    private ArrayList tCPU;
+    private ArrayList tFinaliza;
+    private ArrayList tEspera;
     private int prioridad = 0;
     private boolean completado;
     private boolean sw;
@@ -26,16 +28,36 @@ public class Proceso {
     public Proceso(int tLlegada, int tCPU) {
         this.numeroProceso++;
         this.idProceso = this.numeroProceso;
-        this.tLlegada = tLlegada;
-        this.tCPU = tCPU;
+        
+        this.tLlegada = new ArrayList();
+        this.tLlegada.add(tLlegada);
+        
+        this.tCPU = new ArrayList();
+        this.tCPU.add(tCPU);
+        
+        this.tComienzo = new ArrayList();
+        this.tFinaliza = new ArrayList();
+        this.tEspera = new ArrayList();
+        this.tEspera.add(1);
+        
         this.sw = false;
     }
 
     public Proceso(int tLlegada, int tCPU, int prioridad) {
         this.numeroProceso++;
         this.idProceso = this.numeroProceso;
-        this.tLlegada = tLlegada;
-        this.tCPU = tCPU;
+        
+        this.tLlegada = new ArrayList();
+        this.tLlegada.add(tLlegada);
+        
+        this.tCPU = new ArrayList();
+        this.tCPU.add(tCPU);
+        
+        this.tComienzo = new ArrayList();
+        this.tFinaliza = new ArrayList();
+        this.tEspera = new ArrayList();
+        this.tEspera.add(1);
+        
         this.prioridad = prioridad;
         this.completado = false;
         this.sw = false;
@@ -49,24 +71,79 @@ public class Proceso {
         return this.idProceso;
     }
 
-    public int gettLlegada() {
-        return tLlegada;
+    public int gettLlegada(int option) {
+        if(option == 0){
+            return (int) this.tLlegada.get(this.tLlegada.size()-1);
+        }
+        return (int) this.tLlegada.get(0);
     }
 
     public int gettComienzo() {
-        return tComienzo;
+        return (int) this.tComienzo.get(this.tComienzo.size()-1);
+    }
+    
+    public String gettComienzoTotal() {
+        String str = "";
+        for(int  x = 0 ; x < this.tComienzo.size() ; x++) {
+            if(x != 0){
+                str = str + " - " + this.tComienzo.get(x);
+            } else {
+                str = str + this.tComienzo.get(x);
+            }
+        }
+        return str;
     }
 
     public int gettCPU() {
-        return tCPU;
+        return (int) this.tCPU.get(this.tCPU.size()-1);
+    }
+    
+    public String gettCPUTotal() {
+        String str = "";
+        for(int  x = 0 ; x < this.tCPU.size() ; x++) {
+            if(x != 0){
+                str = str + " - " + this.tCPU.get(x);
+            } else {
+                str = str + this.tCPU.get(x);
+            }
+        }
+        return str;
     }
 
     public int gettFinaliza() {
-        return tFinaliza;
+        return (int) this.tFinaliza.get(this.tFinaliza.size()-1);
+    }
+    
+    public String gettFinalizaTotal() {
+        String str = "";
+        for(int  x = 0 ; x < this.tFinaliza.size() ; x++) {
+            if(x != 0){
+                str = str + " - " + this.tFinaliza.get(x);
+            } else {
+                str = str + this.tFinaliza.get(x);
+            }
+        }
+        return str;
     }
 
-    public int gettEspera() {
-        return tEspera;
+    public String gettEspera() {
+        String str = "";
+        for(int  x = 0 ; x <this.tEspera.size() ; x++) {
+            if(x != 0){
+                str = str + " + " + this.tEspera.get(x);
+            } else {
+                str = str + this.tEspera.get(x);
+            }
+        }
+        return str;
+    }
+    
+    public int gettEsperaTotal() {
+        int total = 0;
+        for(int  x = 0 ; x < this.tEspera.size() ; x++) {
+            total += (int) this.tEspera.get(x);
+        }
+        return total;
     }
 
     public int getPrioridad() {
@@ -78,28 +155,27 @@ public class Proceso {
     }
    
     public void settLlegada(int tLlegada) {
-        this.tEspera += (tLlegada - this.tLlegada);
-        this.tLlegada = tLlegada;
+        //this.tEspera += (tLlegada - this.tLlegada);
+        this.tLlegada.add(tLlegada);
     }
 
     public void settComienzo(int tComienzo) {
-        this.tComienzo = tComienzo;
+        this.tComienzo.add(tComienzo);
         if(!this.sw){
-            this.tEspera += (this.tComienzo - this.tLlegada);
+            //this.tEspera += (this.tComienzo - this.tLlegada);
             this.sw = true;
         }
-        System.out.println(this.tEspera + " - " + this.tFinaliza + " - " + this.tComienzo);
     }
 
     public void settCPU(int tCPU) {
-        this.tCPU = tCPU;
-        if(this.tCPU == 0){
+        this.tCPU.add(tCPU);
+        if(tCPU == 0){
             this.setCompletado(true);
         }
     }
 
     public void settFinaliza(int tFinaliza) {
-        this.tFinaliza = tFinaliza;
+        this.tFinaliza.add(tFinaliza);
     }
     
     public void setPrioridad(int prioridad) {

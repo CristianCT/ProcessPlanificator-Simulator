@@ -329,21 +329,21 @@ public class PlanificadorProcesos extends javax.swing.JFrame {
         for(int x = 0; x < this.procesos.size() ; x++){      
             Object newRow[] = {
                 this.procesos.get(x).getIdProceso(), 
-                Integer.toString(this.procesos.get(x).gettLlegada()), 
-                Integer.toString(this.procesos.get(x).gettCPU()), 
-                Integer.toString(this.procesos.get(x).gettComienzo()), 
-                Integer.toString(this.procesos.get(x).gettFinaliza()), 
-                Integer.toString(this.procesos.get(x).gettEspera()),
+                Integer.toString(this.procesos.get(x).gettLlegada(1)), 
+                this.procesos.get(x).gettCPUTotal(), 
+                this.procesos.get(x).gettComienzoTotal(), 
+                this.procesos.get(x).gettFinalizaTotal(), 
+                this.procesos.get(x).gettEspera(),
             };
             this.modelo.addRow(newRow);
             Object newRow1[] = {
                 this.procesos.get(x).getIdProceso(), 
-                Integer.toString(this.procesos.get(x).gettLlegada()), 
-                Integer.toString(this.procesos.get(x).gettCPU()), 
+                Integer.toString(this.procesos.get(x).gettLlegada(1)), 
+                this.procesos.get(x).gettCPUTotal(), 
                 Integer.toString(this.procesos.get(x).getPrioridad()),
-                Integer.toString(this.procesos.get(x).gettComienzo()), 
-                Integer.toString(this.procesos.get(x).gettFinaliza()), 
-                Integer.toString(this.procesos.get(x).gettEspera()),
+                this.procesos.get(x).gettComienzoTotal(), 
+                this.procesos.get(x).gettFinalizaTotal(), 
+                this.procesos.get(x).gettEspera(),
             };
             this.modelo1.addRow(newRow1);
             
@@ -353,7 +353,7 @@ public class PlanificadorProcesos extends javax.swing.JFrame {
                 this.jTable1.setModel(modelo1);
             }
             
-            this.tEsperaPromedio = this.tEsperaPromedio + this.procesos.get(x).gettEspera();
+            this.tEsperaPromedio = this.tEsperaPromedio + this.procesos.get(x).gettEsperaTotal();
         }
         this.tEsperaPromedio = this.tEsperaPromedio/this.procesos.size();
         this.jLabel5.setText(this.tEsperaPromedio+"");
