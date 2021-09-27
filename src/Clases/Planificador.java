@@ -58,7 +58,7 @@ public class Planificador {
         int x = 1;
         int indexEjecucion = 0;
         do{
-            if((this.tiempo + this.procesos.get(indexEjecucion).gettCPU()) >= this.procesos.get(x).gettLlegada() && this.procesos.get(indexEjecucion).gettCPU() > this.procesos.get(x).gettCPU() && !this.procesos.get(x).isCompletado()){
+            if((this.tiempo + this.procesos.get(indexEjecucion).gettCPU()) >= this.procesos.get(x).gettLlegada() && (this.procesos.get(indexEjecucion).gettCPU() + this.procesos.get(indexEjecucion).gettLlegada() - this.procesos.get(x).gettLlegada()) > this.procesos.get(x).gettCPU() && this.procesos.get(x).gettCPU() < this.procesos.get(indexEjecucion).gettCPU() && !this.procesos.get(x).isCompletado()){
                 this.procesos.get(indexEjecucion).settComienzo(this.tiempo);
                 this.procesos.get(indexEjecucion).settFinaliza(this.procesos.get(x).gettLlegada());
                 this.procesos.get(indexEjecucion).settCPU(this.procesos.get(indexEjecucion).gettCPU() - (this.procesos.get(x).gettLlegada() - this.tiempo));
@@ -180,7 +180,7 @@ public class Planificador {
     };
     
     private int getIncompletedPriority(){
-        int auxiliar = 4;
+        int auxiliar = Integer.MAX_VALUE;
         int indexAuxiliar = 0;
         for(int x = 0 ; x < this.procesos.size() ; x++){
             if(this.procesos.get(x).gettLlegada() <= this.tiempo && this.procesos.get(x).getPrioridad() < auxiliar && !this.procesos.get(x).isCompletado()){
@@ -188,7 +188,7 @@ public class Planificador {
                 indexAuxiliar = x;
             }
         }
-        if(auxiliar != 4){
+        if(auxiliar != Integer.MAX_VALUE){
             return indexAuxiliar;
         }
         return -1;
