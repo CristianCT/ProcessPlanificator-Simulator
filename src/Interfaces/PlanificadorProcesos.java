@@ -353,18 +353,11 @@ public class PlanificadorProcesos extends javax.swing.JFrame {
                 this.jTable1.setModel(modelo1);
             }
             
-            this.tEsperaPromedio = this.tEsperaPromedio + this.procesos.get(x).gettEsperaTotal();
+            this.tEsperaPromedio += this.procesos.get(x).gettEsperaTotal();
         }
         this.tEsperaPromedio = this.tEsperaPromedio/this.procesos.size();
         this.jLabel5.setText(this.tEsperaPromedio+"");
-    }
-    
-    public static void main(String args[]) {
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new PlanificadorProcesos().setVisible(true);
-            }
-        });
+        this.tEsperaPromedio = 0;
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables

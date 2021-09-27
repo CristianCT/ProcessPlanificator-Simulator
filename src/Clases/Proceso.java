@@ -38,7 +38,6 @@ public class Proceso {
         this.tComienzo = new ArrayList();
         this.tFinaliza = new ArrayList();
         this.tEspera = new ArrayList();
-        this.tEspera.add(1);
         
         this.sw = false;
     }
@@ -56,7 +55,6 @@ public class Proceso {
         this.tComienzo = new ArrayList();
         this.tFinaliza = new ArrayList();
         this.tEspera = new ArrayList();
-        this.tEspera.add(1);
         
         this.prioridad = prioridad;
         this.completado = false;
@@ -155,16 +153,11 @@ public class Proceso {
     }
    
     public void settLlegada(int tLlegada) {
-        //this.tEspera += (tLlegada - this.tLlegada);
         this.tLlegada.add(tLlegada);
     }
 
     public void settComienzo(int tComienzo) {
         this.tComienzo.add(tComienzo);
-        if(!this.sw){
-            //this.tEspera += (this.tComienzo - this.tLlegada);
-            this.sw = true;
-        }
     }
 
     public void settCPU(int tCPU) {
@@ -175,6 +168,12 @@ public class Proceso {
     }
 
     public void settFinaliza(int tFinaliza) {
+        if(!this.sw){
+            this.tEspera.add((int)this.tComienzo.get(this.tComienzo.size()-1) - (int)this.tLlegada.get(0));
+            this.sw = true;
+        } else {
+            this.tEspera.add((int)this.tComienzo.get(this.tComienzo.size()-1) - (int)this.tFinaliza.get(this.tFinaliza.size()-1));
+        }
         this.tFinaliza.add(tFinaliza);
     }
     
